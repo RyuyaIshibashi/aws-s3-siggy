@@ -79,7 +79,7 @@ func main() {
 	flag.Parse()
 
 	if *bucketName == "" || *objectKey == "" || *method == "" {
-		fmt.Println("You must supply a method (-m get|put|post|delete), bucket name (-b BUCKET) and object key (-k KEY)")
+		fmt.Println("You must supply a method (-m get|put|delete), bucket name (-b BUCKET) and object key (-k KEY)")
 		return
 	}
 
