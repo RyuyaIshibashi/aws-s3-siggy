@@ -52,22 +52,7 @@ func (presigner Presigner) GetObject(
 	return request, err
 }
 
-func (presigner Presigner) PostObject(
-	ctx context.Context,
-	bucketName string,
-	objectKey string,
-	lifetimeDuration time.Duration) (*v4.PresignedHTTPRequest, error) {
-	request, err := presigner.PresignClient.PresignPostObject(ctx, &s3.PostObjectInput{
-		Bucket: aws.String(bucketName),
-		Key:    aws.String(objectKey),
-	}, s3.WithPresignExpires(lifetimeDuration),
-	)
-	if err != nil {
-		log.Printf("Couldn't get a presigned request to post %v:%v. Here's why: %v\n",
-			bucketName, objectKey, err)
-	}
-	return request, err
-}
+
 
 func (presigner Presigner) DeleteObject(
 	ctx context.Context,
@@ -114,12 +99,10 @@ func main() {
 		req, err = presigner.GetObject(context.TODO(), *bucketName, *objectKey, time.Duration(2*time.Hour))
 	case "put":
 		req, err = presigner.PutObject(context.TODO(), *bucketName, *objectKey, time.Duration(2*time.Hour))
-	case "post":
-		req, err = presigner.PostObject(context.TODO(), *bucketName, *objectKey, time.Duration(2*time.Hour))
 	case "delete":
 		req, err = presigner.DeleteObject(context.TODO(), *bucketName, *objectKey, time.Duration(2*time.Hour))
 	default:
-		fmt.Println("Invalid method. Use 'get', 'put', 'post', or 'delete'")
+		fmt.Println("Invalid method. Use 'get', 'put', or 'delete'")
 		return
 	}
 
