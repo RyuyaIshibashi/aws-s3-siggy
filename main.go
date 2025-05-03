@@ -35,14 +35,32 @@ func (presigner Presigner) PutObject(
 	return request, err
 }
 
+func (presigner Presigner) GetObject(
+	ctx context.Context,
+	bucketName string,
+	objectKey string,
+	lifetimeDuration time.Duration) (*v4.PresignedHTTPRequest, error) {
+	request, err := presigner.PresignClient.PresignGetObject(ctx, &s3.GetObjectInput{
+		Bucket: aws.String(bucketName),
+		Key:    aws.String(objectKey),
+	}, s3.WithPresignExpires(lifetimeDuration),
+	)
+	if err != nil {
+		log.Printf("Couldn't get a presigned request to get %v:%v. Here's why: %v\n",
+			bucketName, objectKey, err)
+	}
+	return request, err
+}
+
 func main() {
+	method := flag.String("m", "", "The method (get or put)")
 	bucketName := flag.String("b", "", "The bucket")
 	objectKey := flag.String("k", "", "The object key")
 
 	flag.Parse()
 
-	if *bucketName == "" || *objectKey == "" {
-		fmt.Println("You must supply a bucket name (-b BUCKET) and object key (-k KEY)")
+	if *bucketName == "" || *objectKey == "" || *method == "" {
+		fmt.Println("You must supply a method (-m get|put), bucket name (-b BUCKET) and object key (-k KEY)")
 		return
 	}
 
@@ -54,7 +72,18 @@ func main() {
 	client := s3.NewFromConfig(cfg)
 	presignedClient := s3.NewPresignClient(client)
 	presigner := Presigner{PresignClient: presignedClient}
-	req, err := presigner.PutObject(context.TODO(), *bucketName, *objectKey, time.Duration(2*time.Hour))
+	
+	var req *v4.PresignedHTTPRequest
+	
+	switch *method {
+	case "get":
+		req, err = presigner.GetObject(context.TODO(), *bucketName, *objectKey, time.Duration(2*time.Hour))
+	case "put":
+		req, err = presigner.PutObject(context.TODO(), *bucketName, *objectKey, time.Duration(2*time.Hour))
+	default:
+		fmt.Println("Invalid method. Use 'get' or 'put'")
+		return
+	}
 
 	if err != nil {
 		panic("configuration error, " + err.Error())
