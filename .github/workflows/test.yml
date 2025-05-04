@@ -22,7 +22,7 @@ jobs:
         run: docker compose build --build-arg BUILDKIT_INLINE_CACHE=1 base
       - name: Wait
         id: wait
-        run: docker compose run --rm console bash -c "/wait"
+        run: docker compose run --rm app bash -c "/wait"
       - name: Run test
         id: run-test
-        run: docker compose run --rm console bash -c "make test"
+        run: docker compose run --rm app bash -c "make test"
