@@ -1,13 +1,11 @@
 package cmd
 
 import (
-	"context"
 	"fmt"
 	"go-aws-s3-presigner/presigner"
+	"go-aws-s3-presigner/s3client"
 	"os"
 
-	"github.com/aws/aws-sdk-go-v2/config"
-	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/spf13/cobra"
 )
 
@@ -33,16 +31,13 @@ func NewCmdRoot() *cobra.Command {
 	cmd.SetOut(os.Stdout)
 	cmd.SetErr(os.Stderr)
 
-	cfg, err := config.LoadDefaultConfig(context.TODO())
+	s3Client, err := s3client.NewS3Client()
 	if err != nil {
-		panic("configuration error, " + err.Error())
+		panic(err)
 	}
 
-	client := s3.NewFromConfig(cfg)
-	presignClient := s3.NewPresignClient(client)
-
 	opts := &CmdOptions{
-		PresignClient: presignClient,
+		PresignClient: s3Client.PresignClient,
 	}
 
 	cmd.AddCommand(NewPutCmd(opts))
