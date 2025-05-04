@@ -59,7 +59,7 @@ func usage(version, revision string) string {
  |__ | | (_| | (_| | |_| |
  |___|_|___, |___, |___, |
         |___/ |___/ |___/ 
-  Version: %s-%s
+  Version: V%s-%s
 
 Available command groups for siggy:
 

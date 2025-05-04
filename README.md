@@ -1,22 +1,44 @@
-### 使い方
+# aws-s3-siggy
+Generate presigned URL for AWS S3
 
-```sh
-# 認証
-aws-vault exec <profile>
-
-# コマンド
-# PutObject（アップロード用URL生成）
-go run main.go -m put -b <bucket_name> -k <object_key>
-
-# GetObject（ダウンロード用URL生成）
-go run main.go -m get -b <bucket_name> -k <object_key>
-
-# DeleteObject（削除用URL生成）
-go run main.go -m delete -b <bucket_name> -k <object_key>
+```
+      _                   
+  ___(_) __ _  __ _ _   _ 
+ / __| |/ _' |/ _' | | | |
+ |__ | | (_| | (_| | |_| |
+ |___|_|___, |___, |___, |
+        |___/ |___/ |___/ 
+  Version: V*.*.*-*******
 ```
 
-### パラメータ
+## Installation
 
-- `-m <method>`: 必須。URLの種類を指定します。選択肢: `get`（ダウンロード用）, `put`（アップロード用）, `delete`（削除用）
-- `-b <bucket_name>`: 必須。S3バケット名
-- `-k <object_key>`: 必須。S3オブジェクトキー
+```sh
+brew install RyuyaIshibashi/aws-s3-siggy/siggy
+```
+
+## Usage
+
+```sh
+# Generate upload URL (PutObject)
+siggy put -b <bucket_name> -k <object_key>
+
+# Generate download URL (GetObject)
+siggy get -b <bucket_name> -k <object_key>
+
+# Generate delete URL (DeleteObject)
+siggy delete -b <bucket_name> -k <object_key>
+```
+
+## Parameters
+
+- `-b <bucket_name>`: Required. Name of the S3 bucket.
+- `-k <object_key>`: Required. S3 object key.
+
+## Example
+
+```sh
+$ siggy -m get -b sample-bucket -k path/to/file.txt
+
+https://sample-bucket.s3.amazonaws.com/path/to/file.txt?X-Amz-...  
+```
