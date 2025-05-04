@@ -2,59 +2,60 @@ package cmd
 
 import (
 	"bytes"
+	"errors"
 	"testing"
 
-	"aws-s3-siggy/presigner"
+	"aws-s3-siggy/presigner/presignerfakes"
 
+	v4 "github.com/aws/aws-sdk-go-v2/aws/signer/v4"
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 )
 
 func TestPutCmd(t *testing.T) {
 	tests := []struct {
 		name        string
-		mockClient  presigner.PresignClient
-		wantErr     bool
+		stub        func(fake *presignerfakes.FakePresignClient)
+		wantedErr   bool
 		expectedErr string
 	}{
 		{
-			name:        "success case",
-			mockClient:  &presigner.MockPresignClient{},
-			wantErr:     false,
-			expectedErr: "",
+			name: "success case",
+			stub: func(fake *presignerfakes.FakePresignClient) {
+				fake.PresignPutObjectReturns(&v4.PresignedHTTPRequest{URL: "https://example.com/put"}, nil)
+			},
+			wantedErr: false,
 		},
 		{
-			name:        "error case",
-			mockClient:  &presigner.ErrorMockPresignClient{},
-			wantErr:     true,
+			name: "error case",
+			stub: func(fake *presignerfakes.FakePresignClient) {
+				fake.PresignPutObjectReturns(nil, errors.New("mock error"))
+			},
+			wantedErr:   true,
 			expectedErr: "mock error",
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			opts := &CmdOptions{
-				PresignClient: tt.mockClient,
-			}
-
+			fake := &presignerfakes.FakePresignClient{}
+			tt.stub(fake)
+			opts := &CmdOptions{PresignClient: fake}
 			err := runPutCmd(t, []string{"--bucketName", "test-bucket", "--objectKey", "test-key"}, opts)
-			if tt.wantErr {
-				require.Error(t, err)
-				assert.Equal(t, tt.expectedErr, err.Error())
+			if tt.wantedErr {
+				assert.Error(t, err)
+				if tt.expectedErr != "" {
+					assert.Contains(t, err.Error(), tt.expectedErr)
+				}
 			} else {
-				require.NoError(t, err)
+				assert.NoError(t, err)
 			}
 		})
 	}
 }
 
 func TestPutCmdFlags(t *testing.T) {
-	mockClient := &presigner.MockPresignClient{}
-	opts := &CmdOptions{
-		PresignClient: mockClient,
-	}
-
-	// Verify required flags
+	fake := &presignerfakes.FakePresignClient{}
+	opts := &CmdOptions{PresignClient: fake}
 	err := runPutCmd(t, []string{}, opts)
 	assert.Error(t, err, "Expected error for missing required flags")
 	assert.Contains(t, err.Error(), "required flag(s) \"bucketName\", \"objectKey\" not set")

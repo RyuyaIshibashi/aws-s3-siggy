@@ -4,13 +4,11 @@ if [ -z "$AWS_PROFILE" ]; then
   exit 1
 fi
 
-# コンテナを停止
 docker compose down
 
-# aws-vaultの認証情報を一時的な変数に格納
+# Store aws-vault credentials in temporary environment variables
 eval $(aws-vault exec "$AWS_PROFILE" -- env | grep AWS_ | sed 's/^/export /')
 
-# docker-composeを実行
 AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
 AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
 AWS_SESSION_TOKEN=$AWS_SESSION_TOKEN \
