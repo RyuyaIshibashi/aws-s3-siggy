@@ -1,9 +1,14 @@
 package main
 
 import (
-	"go-aws-s3-presigner/cmd"
+	"aws-s3-siggy/cmd"
+)
+
+var (
+	version  string
+	revision string
 )
 
 func main() {
-	cmd.Execute()
+	cmd.Execute(version, revision)
 }
