@@ -10,21 +10,26 @@ builds:
     binary: siggy
     ldflags: -s -w -X main.version={{.Version}} -X main.revision={{.ShortCommit}} -X main.date={{.Date}}
 archives:
-  - replacements:
-      darwin: darwin
-      linux: linux
-      windows: windows
-      amd64: x86_64
+  - format: tar.gz
+    format_overrides:
+      - goos: windows
+        format: zip
+    name_template: >-
+      {{ .ProjectName }}_
+      {{- title .Os }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "386" }}i386
+      {{- else }}{{ .Arch }}{{ end }}
     files:
       - LICENSE
       - CREDITS
 release:
   prerelease: auto
 brews:
-  - tap:
+  - name: siggy
+    github:
       owner: RyuyaIshibashi
       name: homebrew-siggy
-    folder: Formula
     homepage: 'https://github.com/RyuyaIshibashi/aws-s3-siggy'
     description: 'Generate presigned URL for AWS S3'
     license: "MIT"
