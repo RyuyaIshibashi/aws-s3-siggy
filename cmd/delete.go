@@ -1,8 +1,8 @@
 package cmd
 
 import (
+	p "aws-s3-siggy/presigner"
 	"context"
-	p "go-aws-s3-presigner/presigner"
 	"time"
 
 	"github.com/spf13/cobra"

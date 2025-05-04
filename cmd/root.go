@@ -1,30 +1,27 @@
 package cmd
 
 import (
+	"aws-s3-siggy/presigner"
+	"aws-s3-siggy/s3client"
 	"fmt"
-	"go-aws-s3-presigner/presigner"
-	"go-aws-s3-presigner/s3client"
 	"os"
 
 	"github.com/spf13/cobra"
 )
 
-var cfgFile string
+var (
+	cfgFile string
+)
 
 type CmdOptions struct {
 	PresignClient presigner.PresignClient
 }
 
-func NewCmdRoot() *cobra.Command {
+func NewCmdRoot(version, revision string) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "siggy",
 		Short: "Command name argument expected.",
-		Long: `Available command groups for siggy:
-
-	  put         Put object to s3
-	  get         Get object from s3
-	  delete      Delete object from s3
-	`,
+		Long:  usage(version, revision),
 	}
 	cmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.cmd-test.yaml)")
 
@@ -47,9 +44,31 @@ func NewCmdRoot() *cobra.Command {
 	return cmd
 }
 
-func Execute() {
-	cmd := NewCmdRoot()
+func Execute(version, revision string) {
+	cmd := NewCmdRoot(version, revision)
 	if err := cmd.Execute(); err != nil {
 		fmt.Println(err)
 	}
+}
+
+func usage(version, revision string) string {
+	format := `
+      _                   
+  ___(_) __ _  __ _ _   _ 
+ / __| |/ _' |/ _' | | | |
+ |__ | | (_| | (_| | |_| |
+ |___|_|___, |___, |___, |
+        |___/ |___/ |___/ 
+  Version: %s-%s
+
+Available command groups for siggy:
+
+	  put         Put object to s3
+	  get         Get object from s3
+	  delete      Delete object from s3
+
+Author:
+  Ryuya Ishibashi
+`
+	return fmt.Sprintf(format, version, revision)
 }

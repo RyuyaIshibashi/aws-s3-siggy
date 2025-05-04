@@ -1,9 +1,9 @@
 package s3client
 
 import (
+	"aws-s3-siggy/presigner"
 	"context"
 	"fmt"
-	"go-aws-s3-presigner/presigner"
 
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/s3"

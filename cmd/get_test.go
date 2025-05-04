@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"testing"
 
-	"go-aws-s3-presigner/presigner"
+	"aws-s3-siggy/presigner"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

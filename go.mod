@@ -1,4 +1,4 @@
-module go-aws-s3-presigner
+module aws-s3-siggy
 
 go 1.22.4
 
