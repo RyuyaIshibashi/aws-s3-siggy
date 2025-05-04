@@ -1,5 +1,5 @@
 version: 2
-project_name: ec2cat
+project_name: siggy
 env:
   - GO111MODULE=on
 before:
@@ -7,7 +7,7 @@ before:
     - go mod tidy
 builds:
   - main: .
-    binary: ec2cat
+    binary: siggy
     ldflags: -s -w -X main.version={{.Version}} -X main.revision={{.ShortCommit}} -X main.date={{.Date}}
 archives:
   - formats: [tar.gz]
