@@ -14,3 +14,13 @@ run:
 .PHONY: exec
 exec:
 	docker compose exec app bash
+
+## Run tests
+.PHONY: test
+test: deps
+	ENV=test go test ./... -p=1
+
+## Lint
+.PHONY: lint
+lint:
+	golangci-lint run -c .golangci-lint.yml ./...
