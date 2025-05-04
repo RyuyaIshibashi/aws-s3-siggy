@@ -18,13 +18,13 @@ func TestGetCmd(t *testing.T) {
 		expectedErr string
 	}{
 		{
-			name:        "正常系",
+			name:        "success case",
 			mockClient:  &presigner.MockPresignClient{},
 			wantErr:     false,
 			expectedErr: "",
 		},
 		{
-			name:        "異常系",
+			name:        "error case",
 			mockClient:  &presigner.ErrorMockPresignClient{},
 			wantErr:     true,
 			expectedErr: "mock error",
@@ -54,7 +54,7 @@ func TestGetCmdFlags(t *testing.T) {
 		PresignClient: mockClient,
 	}
 
-	// フラグの必須設定確認
+	// Verify required flags
 	err := runGetCmd(t, []string{}, opts)
 	assert.Error(t, err, "Expected error for missing required flags")
 	assert.Contains(t, err.Error(), "required flag(s) \"bucketName\", \"objectKey\" not set")
