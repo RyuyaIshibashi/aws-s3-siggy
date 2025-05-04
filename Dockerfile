@@ -10,11 +10,9 @@ RUN go install github.com/air-verse/air@latest \
 	&& go install github.com/x-motemen/gore/cmd/gore@latest \
 	&& go install github.com/spf13/cobra-cli@latest
 
-# Install dependencies
 COPY go.mod go.sum ./
 RUN go mod download
 
-# ソースコードをコピー
 COPY . /app
 
 RUN go build -o bin/siggy main.go
