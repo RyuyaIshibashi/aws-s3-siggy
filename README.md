@@ -1,5 +1,6 @@
 # aws-s3-siggy
-Generate presigned URL for AWS S3
+Generate presigned URLs for AWS S3 operations (upload, download, delete).
+
 
 ```
       _                   
@@ -10,6 +11,17 @@ Generate presigned URL for AWS S3
         |___/ |___/ |___/ 
   Version: V*.*.*-*******
 ```
+
+aws-s3-siggy is a command-line tool written in Go that generates temporary pre-signed URLs for AWS S3 objects.
+It helps you securely grant time-limited access without exposing your AWS credentials.
+
+## Prerequisites
+
+- AWS credentials configured via one of the following:
+  - Environment variables (`AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`)
+  - Shared credentials file (`~/.aws/credentials`)
+  - AWS SSO (via AWS CLI v2)
+  - IAM role (instance profile or web identity)
 
 ## Installation
 
@@ -38,7 +50,7 @@ siggy delete -b <bucket_name> -k <object_key>
 ## Example
 
 ```sh
-$ siggy -m get -b sample-bucket -k path/to/file.txt
+$ siggy get -b sample-bucket -k path/to/file.txt
 
-https://sample-bucket.s3.amazonaws.com/path/to/file.txt?X-Amz-...  
+https://sample-bucket.s3.amazonaws.com/path/to/file.txt?X-Amz-...
 ```

@@ -63,9 +63,9 @@ func usage(version, revision string) string {
 
 Available command groups for siggy:
 
-	  put         Put object to s3
-	  get         Get object from s3
-	  delete      Delete object from s3
+	  put         Create upload URL (PutObject)
+	  get         Create download URL (GetObject)
+	  delete      Create delete URL (DeleteObject)
 
 Author:
   Ryuya Ishibashi
