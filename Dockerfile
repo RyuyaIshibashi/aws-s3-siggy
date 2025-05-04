@@ -15,7 +15,7 @@ COPY go.mod go.sum ./
 RUN go mod download
 
 # ソースコードをコピー
-COPY . .
+COPY . /app
 
 RUN go build -o bin/siggy main.go
 

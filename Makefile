@@ -15,6 +15,11 @@ run:
 exec:
 	docker compose exec app bash
 
+## Install dependencies
+.PHONY: deps
+deps:
+	go mod download
+
 ## Run tests
 .PHONY: test
 test: deps
