@@ -1,0 +1,28 @@
+name: test
+on:
+  push:
+    branches: [ main, testing, develop ]
+  pull_request:
+env:
+  DOCKER_BUILDKIT: 1
+  COMPOSE_DOCKER_CLI_BUILD: 1
+  PROJECT_ID: siggy-testing
+  IMAGE: siggy-image
+jobs:
+  test:
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Build docker image
+        id: build-image
+        run: docker compose build --build-arg BUILDKIT_INLINE_CACHE=1 base
+      - name: Wait
+        id: wait
+        run: docker compose run --rm console bash -c "/wait"
+      - name: Run test
+        id: run-test
+        run: docker compose run --rm console bash -c "make test"
