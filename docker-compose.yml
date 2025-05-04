@@ -1,0 +1,19 @@
+services:
+  base:
+    container_name: siggy-base-image
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+    image: siggy-image:0.1.0
+
+  app:
+    image: siggy-image:0.1.0
+    container_name: siggy-app
+    volumes:
+      - .:/app
+    environment:
+      - AWS_REGION
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
+      - AWS_SESSION_TOKEN
+    command: sh -c "/wait && air"
