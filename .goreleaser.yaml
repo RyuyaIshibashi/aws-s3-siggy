@@ -13,13 +13,13 @@ before:
     - go mod tidy
 
 builds:
-    - env:
-          - CGO_ENABLED=0
-      goos:
-          - linux
-          - windows
-          - darwin
-      ldflags: -s -w -X main.version={{.Version}} -X main.revision={{.ShortCommit}} -X main.date={{.Date}}
+  - env:
+        - CGO_ENABLED=0
+    goos:
+        - linux
+        - windows
+        - darwin
+    ldflags: -s -w -X main.version={{.Version}} -X main.revision={{.ShortCommit}} -X main.date={{.Date}}
 
 archives:
   - formats: [tar.gz]

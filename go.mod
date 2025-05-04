@@ -1,6 +1,6 @@
 module aws-s3-siggy
 
-go 1.22.4
+go 1.22
 
 require (
 	github.com/aws/aws-sdk-go-v2 v1.32.2
