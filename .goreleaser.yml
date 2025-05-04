@@ -1,0 +1,47 @@
+version: 2
+project_name: ec2cat
+env:
+  - GO111MODULE=on
+before:
+  hooks:
+    - go mod tidy
+builds:
+  - main: .
+    binary: ec2cat
+    ldflags: -s -w -X main.version={{.Version}} -X main.revision={{.ShortCommit}} -X main.date={{.Date}}
+archives:
+  - formats: [tar.gz]
+    name_template: >-
+      {{ .ProjectName }}_
+      {{- title .Os }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "386" }}i386
+      {{- else }}{{ .Arch }}{{ end }}
+      {{- if .Arm }}v{{ .Arm }}{{ end }}
+    # use zip for windows archives
+    format_overrides:
+      - goos: windows
+        formats: [zip]
+    files:
+      - LICENSE
+      - CREDITS
+release:
+  prerelease: auto
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
+      - Merge pull request
+      - Merge branch
+
+brews:
+  - repository:
+      owner: RyuyaIshibashi
+      name: homebrew-aws-s3-siggy
+      token: "{{ .Env.TAP_GITHUB_TOKEN }}"
+    homepage: 'https://github.com/RyuyaIshibashi/homebrew-aws-s3-siggy'
+    description: 'Generate presigned URL for AWS S3'
+    license: "MIT"
