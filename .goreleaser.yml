@@ -27,7 +27,7 @@ release:
   prerelease: auto
 brews:
   - name: siggy
-    github:
+    tap:
       owner: RyuyaIshibashi
       name: homebrew-siggy
     homepage: 'https://github.com/RyuyaIshibashi/aws-s3-siggy'
