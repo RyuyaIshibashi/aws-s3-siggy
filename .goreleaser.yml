@@ -42,7 +42,6 @@ brews:
       owner: RyuyaIshibashi
       name: homebrew-aws-s3-siggy
       token: "{{ .Env.TAP_GITHUB_TOKEN }}"
-    folder: Formula
     homepage: 'https://github.com/RyuyaIshibashi/homebrew-aws-s3-siggy'
     description: 'Generate presigned URL for AWS S3'
     license: "MIT"
