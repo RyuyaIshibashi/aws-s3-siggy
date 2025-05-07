@@ -40,6 +40,9 @@ siggy get -b <bucket_name> -k <object_key>
 
 # Generate delete URL (DeleteObject)
 siggy delete -b <bucket_name> -k <object_key>
+
+# Generate upload part URL for multipart upload (UploadPart)
+siggy upload_part -b <bucket_name> -k <object_key> -u <upload_id> -p <part_number>
 ```
 
 ## Parameters

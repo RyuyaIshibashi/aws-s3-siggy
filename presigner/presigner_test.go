@@ -123,3 +123,40 @@ func TestDeleteObject(t *testing.T) {
 		})
 	}
 }
+
+func TestUploadPart(t *testing.T) {
+	tests := []struct {
+		name    string
+		stub    func(*presignerfakes.FakePresignClient)
+		wantErr bool
+	}{
+		{
+			name: "success case",
+			stub: func(fake *presignerfakes.FakePresignClient) {
+				fake.PresignUploadPartReturns(&v4.PresignedHTTPRequest{URL: "https://example.com/upload_part"}, nil)
+			},
+			wantErr: false,
+		},
+		{
+			name: "error case",
+			stub: func(fake *presignerfakes.FakePresignClient) {
+				fake.PresignUploadPartReturns(nil, errors.New("mock error"))
+			},
+			wantErr: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			fake := &presignerfakes.FakePresignClient{}
+			tt.stub(fake)
+			p := presigner.NewPresigner(fake)
+			err := p.UploadPart(context.Background(), "test-bucket", "test-key", "test-upload-id", 1, time.Hour)
+			if tt.wantErr {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+			}
+		})
+	}
+}
