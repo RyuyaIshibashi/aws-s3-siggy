@@ -56,6 +56,21 @@ type FakePresignClient struct {
 		result1 *v4.PresignedHTTPRequest
 		result2 error
 	}
+	PresignUploadPartStub        func(context.Context, *s3.UploadPartInput, ...func(*s3.PresignOptions)) (*v4.PresignedHTTPRequest, error)
+	presignUploadPartMutex       sync.RWMutex
+	presignUploadPartArgsForCall []struct {
+		arg1 context.Context
+		arg2 *s3.UploadPartInput
+		arg3 []func(*s3.PresignOptions)
+	}
+	presignUploadPartReturns struct {
+		result1 *v4.PresignedHTTPRequest
+		result2 error
+	}
+	presignUploadPartReturnsOnCall map[int]struct {
+		result1 *v4.PresignedHTTPRequest
+		result2 error
+	}
 	invocations      map[string][][]interface{}
 	invocationsMutex sync.RWMutex
 }
@@ -258,6 +273,72 @@ func (fake *FakePresignClient) PresignPutObjectReturnsOnCall(i int, result1 *v4.
 	}{result1, result2}
 }
 
+func (fake *FakePresignClient) PresignUploadPart(arg1 context.Context, arg2 *s3.UploadPartInput, arg3 ...func(*s3.PresignOptions)) (*v4.PresignedHTTPRequest, error) {
+	fake.presignUploadPartMutex.Lock()
+	ret, specificReturn := fake.presignUploadPartReturnsOnCall[len(fake.presignUploadPartArgsForCall)]
+	fake.presignUploadPartArgsForCall = append(fake.presignUploadPartArgsForCall, struct {
+		arg1 context.Context
+		arg2 *s3.UploadPartInput
+		arg3 []func(*s3.PresignOptions)
+	}{arg1, arg2, arg3})
+	stub := fake.PresignUploadPartStub
+	fakeReturns := fake.presignUploadPartReturns
+	fake.recordInvocation("PresignUploadPart", []interface{}{arg1, arg2, arg3})
+	fake.presignUploadPartMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakePresignClient) PresignUploadPartCallCount() int {
+	fake.presignUploadPartMutex.RLock()
+	defer fake.presignUploadPartMutex.RUnlock()
+	return len(fake.presignUploadPartArgsForCall)
+}
+
+func (fake *FakePresignClient) PresignUploadPartCalls(stub func(context.Context, *s3.UploadPartInput, ...func(*s3.PresignOptions)) (*v4.PresignedHTTPRequest, error)) {
+	fake.presignUploadPartMutex.Lock()
+	defer fake.presignUploadPartMutex.Unlock()
+	fake.PresignUploadPartStub = stub
+}
+
+func (fake *FakePresignClient) PresignUploadPartArgsForCall(i int) (context.Context, *s3.UploadPartInput, []func(*s3.PresignOptions)) {
+	fake.presignUploadPartMutex.RLock()
+	defer fake.presignUploadPartMutex.RUnlock()
+	argsForCall := fake.presignUploadPartArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+}
+
+func (fake *FakePresignClient) PresignUploadPartReturns(result1 *v4.PresignedHTTPRequest, result2 error) {
+	fake.presignUploadPartMutex.Lock()
+	defer fake.presignUploadPartMutex.Unlock()
+	fake.PresignUploadPartStub = nil
+	fake.presignUploadPartReturns = struct {
+		result1 *v4.PresignedHTTPRequest
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakePresignClient) PresignUploadPartReturnsOnCall(i int, result1 *v4.PresignedHTTPRequest, result2 error) {
+	fake.presignUploadPartMutex.Lock()
+	defer fake.presignUploadPartMutex.Unlock()
+	fake.PresignUploadPartStub = nil
+	if fake.presignUploadPartReturnsOnCall == nil {
+		fake.presignUploadPartReturnsOnCall = make(map[int]struct {
+			result1 *v4.PresignedHTTPRequest
+			result2 error
+		})
+	}
+	fake.presignUploadPartReturnsOnCall[i] = struct {
+		result1 *v4.PresignedHTTPRequest
+		result2 error
+	}{result1, result2}
+}
+
 func (fake *FakePresignClient) Invocations() map[string][][]interface{} {
 	fake.invocationsMutex.RLock()
 	defer fake.invocationsMutex.RUnlock()
@@ -267,6 +348,8 @@ func (fake *FakePresignClient) Invocations() map[string][][]interface{} {
 	defer fake.presignGetObjectMutex.RUnlock()
 	fake.presignPutObjectMutex.RLock()
 	defer fake.presignPutObjectMutex.RUnlock()
+	fake.presignUploadPartMutex.RLock()
+	defer fake.presignUploadPartMutex.RUnlock()
 	copiedInvocations := map[string][][]interface{}{}
 	for key, value := range fake.invocations {
 		copiedInvocations[key] = value
