@@ -92,7 +92,7 @@ func (presigner Presigner) UploadPart(
 		Bucket:     aws.String(bucketName),
 		Key:        aws.String(objectKey),
 		UploadId:   aws.String(uploadId),
-		PartNumber: partNumber,
+		PartNumber: aws.Int32(partNumber),
 	}, s3.WithPresignExpires(lifetimeDuration),
 	)
 	if err != nil {
