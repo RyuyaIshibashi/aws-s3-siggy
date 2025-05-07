@@ -80,3 +80,29 @@ func (presigner Presigner) DeleteObject(
 
 	return nil
 }
+
+func (presigner Presigner) UploadPart(
+	ctx context.Context,
+	bucketName string,
+	objectKey string,
+	uploadId string,
+	partNumber int32,
+	lifetimeDuration time.Duration) error {
+	request, err := presigner.PresignClient.PresignUploadPart(ctx, &s3.UploadPartInput{
+		Bucket:     aws.String(bucketName),
+		Key:        aws.String(objectKey),
+		UploadId:   aws.String(uploadId),
+		PartNumber: partNumber,
+	}, s3.WithPresignExpires(lifetimeDuration),
+	)
+	if err != nil {
+		log.Printf("Couldn't get a presigned request to upload part %v:%v (part %d). Here's why: %v\n",
+			bucketName, objectKey, partNumber, err)
+		return err
+	}
+
+	fmt.Println("The URL: ")
+	fmt.Println(request.URL)
+
+	return nil
+}

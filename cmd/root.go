@@ -40,6 +40,7 @@ func NewCmdRoot(version, revision string) *cobra.Command {
 	cmd.AddCommand(NewPutCmd(opts))
 	cmd.AddCommand(NewGetCmd(opts))
 	cmd.AddCommand(NewDeleteCmd(opts))
+	cmd.AddCommand(NewUploadPartCmd(opts))
 
 	return cmd
 }
@@ -66,6 +67,7 @@ Available command groups for siggy:
 	  put         Create upload URL (PutObject)
 	  get         Create download URL (GetObject)
 	  delete      Create delete URL (DeleteObject)
+	  upload_part Create upload part URL (UploadPart)
 
 Author:
   Ryuya Ishibashi
