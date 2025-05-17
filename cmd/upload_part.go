@@ -21,7 +21,7 @@ func NewUploadPartCmd(opts *CmdOptions) *cobra.Command {
 
 	cmd := &cobra.Command{
 		Use:   "upload_part",
-		Short: "Upload part to s3 multipart upload.",
+		Short: "Create upload part URL (UploadPart).",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			partNumber, err := strconv.ParseInt(uploadPartOpts.partNumber, 10, 32)
 			if err != nil {
@@ -45,16 +45,16 @@ func NewUploadPartCmd(opts *CmdOptions) *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVarP(&uploadPartOpts.bucketName, "bucketName", "b", "", "Bucket name")
+	cmd.Flags().StringVarP(&uploadPartOpts.bucketName, "bucketName", "b", "", "Bucket name (required)")
 	cmd.MarkFlagRequired("bucketName")
 
-	cmd.Flags().StringVarP(&uploadPartOpts.objectKey, "objectKey", "k", "", "Object key")
+	cmd.Flags().StringVarP(&uploadPartOpts.objectKey, "objectKey", "k", "", "Object key (required)")
 	cmd.MarkFlagRequired("objectKey")
 
-	cmd.Flags().StringVarP(&uploadPartOpts.uploadId, "uploadId", "u", "", "Upload ID")
+	cmd.Flags().StringVarP(&uploadPartOpts.uploadId, "uploadId", "u", "", "Upload ID (required)")
 	cmd.MarkFlagRequired("uploadId")
 
-	cmd.Flags().StringVarP(&uploadPartOpts.partNumber, "partNumber", "p", "", "Part number")
+	cmd.Flags().StringVarP(&uploadPartOpts.partNumber, "partNumber", "p", "", "Part number (required)")
 	cmd.MarkFlagRequired("partNumber")
 
 	return cmd

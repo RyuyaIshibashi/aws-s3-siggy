@@ -18,7 +18,7 @@ func NewGetCmd(opts *CmdOptions) *cobra.Command {
 
 	cmd := &cobra.Command{
 		Use:   "get",
-		Short: "Get object from s3.",
+		Short: "Create download URL (GetObject).",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			presigner := p.NewPresigner(opts.PresignClient)
 			err := presigner.GetObject(context.TODO(), getOpts.bucketName, getOpts.objectKey, time.Duration(2*time.Hour))
@@ -30,10 +30,10 @@ func NewGetCmd(opts *CmdOptions) *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVarP(&getOpts.bucketName, "bucketName", "b", "", "Bucket name")
+	cmd.Flags().StringVarP(&getOpts.bucketName, "bucketName", "b", "", "Bucket name (required)")
 	cmd.MarkFlagRequired("bucketName")
 
-	cmd.Flags().StringVarP(&getOpts.objectKey, "objectKey", "k", "", "Object key")
+	cmd.Flags().StringVarP(&getOpts.objectKey, "objectKey", "k", "", "Object key (required)")
 	cmd.MarkFlagRequired("objectKey")
 
 	return cmd
