@@ -1,5 +1,5 @@
 # aws-s3-siggy
-Generate presigned URLs for AWS S3 operations (upload, download, delete).
+Generate presigned URLs for AWS S3 operations (upload, download, delete, multipart upload).
 
 
 ```
@@ -49,6 +49,8 @@ siggy upload_part -b <bucket_name> -k <object_key> -u <upload_id> -p <part_numbe
 
 - `-b <bucket_name>`: Required. Name of the S3 bucket.
 - `-k <object_key>`: Required. S3 object key.
+- `-u <upload_id>`: Required for upload_part. The ID of the multipart upload.
+- `-p <part_number>`: Required for upload_part. The part number of the multipart upload.
 
 ## Example
 

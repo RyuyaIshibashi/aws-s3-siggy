@@ -18,7 +18,7 @@ func NewDeleteCmd(opts *CmdOptions) *cobra.Command {
 
 	cmd := &cobra.Command{
 		Use:   "delete",
-		Short: "Delete object from s3.",
+		Short: "Create delete URL (DeleteObject).",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			presigner := p.NewPresigner(opts.PresignClient)
 			err := presigner.DeleteObject(context.TODO(), deleteOpts.bucketName, deleteOpts.objectKey, time.Duration(2*time.Hour))
@@ -30,10 +30,10 @@ func NewDeleteCmd(opts *CmdOptions) *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVarP(&deleteOpts.bucketName, "bucketName", "b", "", "Bucket name")
+	cmd.Flags().StringVarP(&deleteOpts.bucketName, "bucketName", "b", "", "Bucket name (required)")
 	cmd.MarkFlagRequired("bucketName")
 
-	cmd.Flags().StringVarP(&deleteOpts.objectKey, "objectKey", "k", "", "Object key")
+	cmd.Flags().StringVarP(&deleteOpts.objectKey, "objectKey", "k", "", "Object key (required)")
 	cmd.MarkFlagRequired("objectKey")
 
 	return cmd
